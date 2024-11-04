@@ -1,5 +1,8 @@
+/* src/Notifications.css */
+
 .Notifications {
-	padding: 2em;
-	border: 2px solid red;
-	font-family: Arial, Helvetica, sans-serif;
+  border: 1px solid #ccc;
+  padding: 20px;
+  margin: 10px;
 }
+
