@@ -39,5 +39,10 @@
   },
   "devDependencies": {
     "eslint": "^9.14.0"
+  },
+  "jest": {
+    "transformIgnorePatterns": [
+      "node_modules/(?!undici)"
+    ]
   }
 }
