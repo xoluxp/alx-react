@@ -1,39 +1,35 @@
-// src/App.js
-
-import React from 'react';
+import logo from './holberton-logo.jpg';
 import './App.css';
-import holbertonLogo from './holberton-logo.png';
 import { getFullYear, getFooterCopy } from './utils';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={holbertonLogo} alt="Holberton Logo" />
-        <h1>School dashboard</h1>
-      </header>
-      <main className="App-body">
-        <p>Login to access the full dashboard</p>
-
-        {/* Email Label and Input */}
-        <label htmlFor="email">Email:</label>
-        <input type="email" id="email" name="email" />
-
-        {/* Password Label and Input */}
-        <label htmlFor="password">Password:</label>
-        <input type="password" id="password" name="password" />
-
-        {/* OK Button */}
-        <button type="button">OK</button>
-      </main>
-      <footer className="App-footer">
-        <p>
-          Copyright {getFullYear()} - {getFooterCopy(false)}
-        </p>
-      </footer>
-    </div>
-  );
+	return (
+		<div className='App'>
+			<div className='App-header'>
+				<img src={logo} alt='Holberton' />
+				<h1>School dashboard</h1>
+			</div>
+			<div className='App-body'>
+				<p>Login to access the full dashboard</p>
+				<section className='form-inputs'>
+					<section className='input'>
+						<label htmlFor='email'>Email:</label>
+						<input type='email' name='email' id='email' />
+					</section>
+					<section className='input'>
+						<label htmlFor='password'>Password: </label>
+						<input type='password' name='password' id='password' />
+					</section>
+					<button>OK</button>
+				</section>
+			</div>
+			<div className='App-footer'>
+				<p>
+					Copyright {getFullYear()} - {getFooterCopy(true)}
+				</p>
+			</div>
+		</div>
+	);
 }
 
 export default App;
-
