@@ -1,55 +1,55 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { StyleSheet, css } from 'aphrodite';
+import { StyleSheet, css } from "aphrodite";
 
-const styles = StyleSheet.create({
-	default: {
-		color: 'blue',
-	},
-	urgent: {
-		color: 'red',
-	},
-});
 
 class NotificationItem extends React.PureComponent {
-	render() {
-		const { type, value, html, markAsRead, id } = this.props;
-		return (
-			<React.Fragment>
-				{type && value ? (
-					<li
-						className={
-							type === 'default' ? css(styles.default) : css(styles.urgent)
-						}
-						onClick={() => markAsRead(id)}
-						data-notification-type={type}
-					>
-						{value}
-					</li>
-				) : null}
-				{html ? (
-					<li
-						onClick={() => markAsRead(id)}
-						data-urgent
-						className={css(styles.urgent)}
-						dangerouslySetInnerHTML={{ __html: html }}
-					></li>
-				) : null}
-			</React.Fragment>
-		);
-	}
-}
+  constructor(props) {
+    super(props);
+    this.selected_style = this.props.type === 'default' ?  itemStyles.default : itemStyles.urgent;
+  }
 
-NotificationItem.propTypes = {
-	type: PropTypes.string.isRequired,
-	value: PropTypes.string,
-	__html: PropTypes.shape({
-		html: PropTypes.string,
-	}),
+  render() {
+    return (
+      this.props.value ? 
+      <li
+      data-notification-type={this.props.type}
+      onClick={() => this.props.markAsRead(this.props.id)}
+      className={css(this.selected_style)}
+      >{this.props.value}</li> 
+      :
+      <li
+      data-notification-type={this.props.type}
+      dangerouslySetInnerHTML={this.props.html}
+      onClick={() => {console.log('empty func');}}
+      className={css(this.selected_style)}
+      ></li>
+    );
+  }
 };
 
+const itemStyles = StyleSheet.create({
+  urgent: {
+		color: 'red'
+	},
+
+	default: {
+		color: 'blue'
+	}
+});
+
 NotificationItem.defaultProps = {
-	type: 'default',
+  type: 'default',
+  markAsRead: () => {console.log('empty func');},
+	id: 0
+};
+
+NotificationItem.propTypes = {
+  html: PropTypes.shape({__html: PropTypes.string}),
+  type: PropTypes.string.isRequired,
+  value: PropTypes.string,
+  markAsRead: PropTypes.func,
+  id: PropTypes.number
 };
 
 export default NotificationItem;
