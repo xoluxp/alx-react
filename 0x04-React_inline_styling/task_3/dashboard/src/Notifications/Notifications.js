@@ -1,129 +1,119 @@
-import React from 'react';
-import closeIcon from '../assets/close-icon.png';
+import React, { Component, Fragment } from 'react';
+import close_icon from '../assets/close-icon.png';
 import NotificationItem from './NotificationItem';
-import PropeTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import NotificationItemShape from './NotificationItemShape';
 import { StyleSheet, css } from 'aphrodite';
 
-class Notifications extends React.Component {
+class Notifications extends Component {
   constructor(props) {
     super(props);
     this.markAsRead = this.markAsRead.bind(this);
   }
-
-  shouldComponentUpdate(nextProps) {
-    return nextProps.listNotifications.length > this.props.listNotifications.length;
-  }
-
   markAsRead(id) {
     console.log(`Notification ${id} has been marked as read`);
   }
+  shouldComponentUpdate(nextProps) {
+    return (
+      nextProps.listNotifications.length > this.props.listNotifications.length
+    );
+  }
 
   render() {
+    const { displayDrawer, listNotifications } = this.props;
+    const show = css(displayDrawer ? styles.showOff : styles.showOn);
     return (
-      <>
-        <div className={css(notificationStyles.menuItem)}>
-          Your notifications
+      <Fragment>
+        <div className={css(styles.menuItem)}>
+          <p className={show}>Your notifications</p>
         </div>
-        {this.props.displayDrawer? 
-            <div className={css(notificationStyles.notifications)}>
-              <button style={{
-                color: '#3a3a3a',
-                fontWeight: 'bold',
-                background: 'none',
-                border: 'none',
-                fontSize: '15px',
+        {displayDrawer && (
+          <div className={css(styles.notifications)}>
+            <p>Here is the list of notifications</p>
+            <ul>
+              {listNotifications.length === 0 && (
+                <NotificationItem value='No new notification for now' />
+              )}
+              {listNotifications.map((notification) => (
+                <NotificationItem
+                  key={notification.id}
+                  type={notification.type}
+                  value={notification.value}
+                  html={notification.html}
+                  markAsRead={this.markAsRead}
+                />
+              ))}
+            </ul>
+            <button
+              type='button'
+              aria-label='Close'
+              onClick={() => console.log('Close button has been clicked')}
+              style={{
+                display: 'inline-block',
                 position: 'absolute',
-                right: '3px',
-                top: '3px',
-                cursor: 'pointer',
+                top: '56px',
+                right: '16px',
+                background: 0,
+                border: 0,
                 outline: 'none',
+                cursor: 'pointer',
+                zIndex: 1,
               }}
-              aria-label="Close"
-              className={css(notificationStyles.button)}
-              onClick={(e) => {
-                console.log('Close button has been clicked');
-              }}
-              >
-                <img src={closeIcon} alt="close icon" width="15px" />
-              </button>
-              {
-                this.props.listNotifications.length != 0 ?
-                  <p>Here is the list of notifications</p>
-                : null
-              }
-              <ul className={css(notificationStyles.ul)}>
-                {
-                  this.props.listNotifications.length == 0 ?
-                    <NotificationItem type="default" value="No new notification for now" />
-                  : null
-                }
-                {
-                  this.props.listNotifications.map((val, idx)=> {
-                    return <NotificationItem
-                    type={val.type}
-                    value={val.value}
-                    html={val.html}
-                    key={val.id}
-                    markAsRead={this.markAsRead}
-                    id={val.id}
-                  />
-                  })
-                }
-              </ul>
-            </div>
-          :
-            null
-        }
-        
-      </>
+            >
+              <img
+                src={close_icon}
+                alt=''
+                style={{ width: '8px', height: '8px' }}
+              />
+            </button>
+          </div>
+        )}
+      </Fragment>
     );
   }
 }
 
-const notificationStyles = StyleSheet.create({
-	notifications: {
-    border: '3px dotted var(--holberton-red)',
-    padding: '6px 12px',
-    position: 'absolute',
-    top: '21px',
-    right: '7px',
-    marginTop: '12px',
-    zIndex: '100',
-    '@media (max-width: 900px)': {
-      width: '100%',
-      padding: '0px',
-      fontSize: 20,
-      position: 'relative',
-      right: 0,
-      left: 0,
-      border: 'none',
-    }
-	},
-  menuItem: {
-    textAlign: 'right'
-  },
-  ul: {
-    '@media (max-width: 900px)': {
-      padding: 0
-    }
-  },
-  button: {
-    '@media (max-width: 900px)': {
-      position: 'relative',
-      float: 'right',
-    }
-  }
-});
-
 Notifications.defaultProps = {
   displayDrawer: false,
-  listNotifications: []
+  listNotifications: [],
 };
 
 Notifications.propTypes = {
-  displayDrawer: PropeTypes.bool,
-  listNotifications: PropeTypes.arrayOf(NotificationItemShape)
+  displayDrawer: PropTypes.bool,
+  listNotifications: PropTypes.arrayOf(NotificationItemShape),
 };
+
+const screenSize = {
+  small: '@media screen and (max-width: 900px)',
+};
+
+const styles = StyleSheet.create({
+  notifications: {
+    fontSize: '20px',
+    border: 'thin dotted #e0344a',
+    padding: '4px 16px',
+    float: 'right',
+    [screenSize.small]: {
+      width: '90%',
+      border: 'none',
+      backgroundColor: 'white',
+    },
+  },
+  menuItem: {
+    textAlign: 'right',
+    marginRight: '16px',
+    [screenSize.small]: {},
+  },
+  showOff: {
+    marginRight: '8px',
+    [screenSize.small]: {
+      display: 'none',
+    },
+  },
+
+  showOn: {
+    marginRight: '8px',
+  },
+});
 
 export default Notifications;
